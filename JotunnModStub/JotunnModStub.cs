@@ -1,30 +1,49 @@
-﻿using BepInEx;
-using Jotunn.Entities;
-using Jotunn.Managers;
-using Jotunn.Utils;
+﻿// JotunnModStub
+// a Valheim mod skeleton using JötunnLib
+// 
+// File:    JotunnModStub.cs
+// Project: JotunnModStub
+
+using BepInEx;
+using HarmonyLib;
+using System.Reflection;
+using UnityEngine;
+using ValheimMod.UnityWrappers;
 
 namespace JotunnModStub
 {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-    [BepInDependency(Jotunn.Main.ModGuid)]
-    //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
-    internal class JotunnModStub : BaseUnityPlugin
+    internal class JotunnModStubPlugin : BaseUnityPlugin
     {
         public const string PluginGUID = "com.jotunn.jotunnmodstub";
         public const string PluginName = "JotunnModStub";
         public const string PluginVersion = "0.0.1";
-        
-        // Use this class to add your own localization to the game
-        // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
-        public static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
 
+        private Harmony m_harmony;
+        
         private void Awake()
         {
-            // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
-            Jotunn.Logger.LogInfo("ModStub has landed");
-            
-            // To learn more about Jotunn's features, go to
-            // https://valheim-modding.github.io/Jotunn/tutorials/overview.html
+            // Create harmony patches
+            m_harmony = new Harmony(PluginGUID);
+            m_harmony.PatchAll();
+
+            // Make sure the references for the Unity wrappers are loaded
+            Assembly.GetAssembly(typeof(ItemDropWrapper));
+        }
+
+#if DEBUG
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F6))
+            { // Set a breakpoint here to break on F6 key press
+            }
+        }
+#endif
+
+        private void OnDestroy()
+        {
+            // Remove harmony patches
+            m_harmony.UnpatchAll(PluginGUID);
         }
     }
 }

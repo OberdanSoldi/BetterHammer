@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DLL=JotunnModStub/bin/Release/JotunnModStub.dll
-PLUGINS=JotunnModStub/Package/plugins
+PLUGINS=ChebsNecromancy/Package/plugins
 README=README.md
 #TRANSLATIONS=Translations
 
